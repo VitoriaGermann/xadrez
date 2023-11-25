@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const infoDisplay = document.querySelector("#info-display");
 
     const width = 8;
-    let playerGo = 'white'
-    playerDisplay.textContent = 'white'
+    let playerGo = 'black'
+    playerDisplay.textContent = 'black'
 
     const startPieces = [
         rook, knight, bishop, queen, king, bishop, knight, rook,
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if(row % 2 === 0){
                 square.classList.add(i % 2 === 0 ? "brown" : "beige")
             } else{
-                square.classList.add(i % 2 === 0 ? "beige" : "bronw")
+                square.classList.add(i % 2 === 0 ? "beige" : "brown")
             }
             
             //condicional para colorir de forma correta as peças
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const correctGo = draggedElement.firstChild.classList.contains(playerGo)
         const taken = e.target.classList.contains('piece')
         const valid = checkIfValid(e.target)
-        const opponentGo = playerGo === 'black' ? 'white' : 'black'
+        const opponentGo = playerGo === 'white' ? 'black' : 'white'
         const takenByOpponent = e.target.firstChild?.classList.contains(opponentGo)
 
         if(correctGo){
@@ -119,14 +119,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //função para alternar a vez dos jogadores
     function changePlayer(){
-        if(playerGo === "white"){
+        if(playerGo === "black"){
             reverseIds()
-            playerGo = "black"
-            playerDisplay.textContent = "black"
-        } else{
-            revertIds()
             playerGo = "white"
             playerDisplay.textContent = "white"
+        } else{
+            revertIds()
+            playerGo = "black"
+            playerDisplay.textContent = "black"
         }
     }
 
