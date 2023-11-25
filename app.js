@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     createBoard();
 
-    const allSquares = document.querySelectorAll("#gameboard .square")
+    const allSquares = document.querySelectorAll(".square")
 
     allSquares.forEach(square => {
         square.addEventListener('dragstart', dragStart)
@@ -73,21 +73,71 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function dragDrop (e){
         e.stopPropagation()
+        const correctGo = draggedElement.firstChild.classList.contains(playerGo)
         const taken = e.target.classList.contains('piece')
-        //e.target.parentNode.append(draggedElement)
-        //e.target.remove()
+        const valid = checkIfValid(e.target)
+        const opponentGo = playerGo === 'black' ? 'white' : 'black'
+        const takenByOpponent = e.target.firstChild?.classList.contains(opponentGo)
 
-        changePlayer()
+        if(correctGo){
+            if(takenByOpponent && valid){
+                e.target.parentNode.append(draggedElement)
+                e.target.remove()
+                changePlayer()
+                return
+            }
+            if(taken && !takenByOpponent){
+                infoDisplay.textContent = "You cannot go here!"
+                setTimeout(() => infoDisplay.textContent = "", 2000)
+                return
+            }
+            if(valid){
+                e.target.append(draggedElement)
+                changePlayer()
+                return
+            }
+        }
+    }
+
+    function checkIfValid(target){
+        const targetId = Number(target.getAttribute('square-id')) || Number(target.parentNode.getAttribute('square-id'))
+        const startId = Number(startPositionId)
+        const piece = draggedElement.infoDisplay
+
+        switch(piece){
+            case 'pawn' :
+                const starterRow = [8, 9, 10, 11, 12, 13, 14, 15]
+                if(
+                    starterRow.includes(startId) && startId + width * 2 === targetId ||
+                    startId + width === targetId ||
+                    startId + width - 1 === targetId && document.querySelector(`[square-id="${startId+width-1}"]`).firstChild ||
+                    startId + width + 1 === targetId && document.querySelector(`[square-id="${startId+width+1}"]`).firstChild
+
+                    ){return true}
+        }
     }
 
     //função para alternar a vez dos jogadores
     function changePlayer(){
         if(playerGo === "white"){
+            reverseIds()
             playerGo = "black"
             playerDisplay.textContent = "black"
         } else{
+            revertIds()
             playerGo = "white"
             playerDisplay.textContent = "white"
         }
+    }
+
+    function reverseIds(){
+        const allSquares = document.querySelectorAll(".square")
+        allSquares.forEach((square, i) => 
+            square.setAttribute('square-id', (width*width-1) -1))
+    }
+
+    function revertIds(){
+        const allSquares = document.querySelectorAll(".square")
+            allSquares.forEach((square, i) => square.setAttribute('square-id'))
     }
 });
