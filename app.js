@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //condicional para colorir de forma correta o tabuleiro
             if(row % 2 === 0){
-                square.classList.add(i % 2 === 0 ? "brown" : "beige")
-            } else{
                 square.classList.add(i % 2 === 0 ? "beige" : "brown")
+            } else{
+                square.classList.add(i % 2 === 0 ? "brown" : "beige")
             }
             
             //condicional para colorir de forma correta as peças
@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.stopPropagation()
         const correctGo = draggedElement.firstChild.classList.contains(playerGo)
         const taken = e.target.classList.contains('piece')
+        changePlayer()
         const valid = checkIfValid(e.target)
         const opponentGo = playerGo === 'white' ? 'black' : 'white'
         const takenByOpponent = e.target.firstChild?.classList.contains(opponentGo)
@@ -102,7 +103,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function checkIfValid(target){
         const targetId = Number(target.getAttribute('square-id')) || Number(target.parentNode.getAttribute('square-id'))
         const startId = Number(startPositionId)
-        const piece = draggedElement.infoDisplay
+        const piece = draggedElement.id
+
+        console.log('targetId', targetId)
+        console.log('startId', startId)
+        console.log('piece', piece)
     
         switch(piece){
             case 'pawn' :
@@ -134,11 +139,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function reverseIds(){
         const allSquares = document.querySelectorAll(".square")
         allSquares.forEach((square, i) => 
-            square.setAttribute('square-id', (width*width-1) -1))
+            square.setAttribute('square-id', (width*width-1) -i))
     }
 
     function revertIds(){
         const allSquares = document.querySelectorAll(".square")
-            allSquares.forEach((square, i) => square.setAttribute('square-id'))
+            allSquares.forEach((square, i) => square.setAttribute('square-id', i))
     }
 });
