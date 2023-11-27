@@ -78,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
         e.stopPropagation()
         const correctGo = draggedElement.firstChild.classList.contains(playerGo)
         const taken = e.target.classList.contains('piece')
-        changePlayer()
         const valid = checkIfValid(e.target)
         const opponentGo = playerGo === 'white' ? 'black' : 'white'
         const takenByOpponent = e.target.firstChild?.classList.contains(opponentGo)
@@ -261,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function checkForWin(){
-        const kings = Arrya.from(document.querySelectorAll('#king'))
+        const kings = Array.from(document.querySelectorAll('#king'))
         if(!kings.some(king => king.firstChild.classList.contains('white'))){
             infoDisplay.innerHTML = "Black player wins!"
             const allSquares = document.querySelectorAll('.square')
