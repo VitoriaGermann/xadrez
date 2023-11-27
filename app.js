@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const startId = Number(startPositionId)
         const piece = draggedElement.id
 
+        //targetId e startId mostram que o tabuleiro está errado.
         console.log('targetId', targetId)
         console.log('startId', startId)
         console.log('piece', piece)
