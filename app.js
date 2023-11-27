@@ -26,7 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
             square.classList.add('square');
             square.innerHTML = startPiece
             square.firstChild?.setAttribute('draggable', true)
+            //Problema linha 30 e 32
             square.setAttribute('square-id', i)
+            //square.setAttribute('square-id', (width * (width - 1 - Math.floor(i / width))) + (i % width))
             const row = Math.floor((63 - i) / 8) + 1
 
             //condicional para colorir de forma correta o tabuleiro
@@ -112,9 +114,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
         switch(piece){
             case 'pawn' :
+                //Consequentemente linha 118 também não vai funcionar
                 const starterRow = [8, 9, 10, 11, 12, 13, 14, 15]
                 if(
-                    starterRow.includes(startId) && startId + width * 2 === targetId ||
+                    //Super acho que é algo aqui na 121
+                    starterRow.includes(startId) && (startId + width * 2) === targetId ||
                     startId + width === targetId ||
                     startId + width - 1 === targetId && document.querySelector(`[square-id="${startId+width-1}"]`).firstChild ||
                     startId + width + 1 === targetId && document.querySelector(`[square-id="${startId+width+1}"]`).firstChild
@@ -139,7 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function reverseIds(){
         const allSquares = document.querySelectorAll(".square")
-        allSquares.forEach((square, i) => 
+        allSquares.forEach((square, i) =>
+            //Também acho que é algo na 148
             square.setAttribute('square-id', (width*width-1) -i))
     }
 
