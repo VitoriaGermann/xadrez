@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.alert-danger').style.display = 'none'
     document.querySelector('.alert-success').style.display = 'none'
+
     const gameBoard = document.querySelector("#gameboard");
     const playerDisplay = document.querySelector("#player");
     const infoMove = document.querySelector("#info-move");
     const infoWin = document.querySelector("#info-win");
+    const movedPiecesDiv = document.querySelector('.rectangle');
+
     const width = 8;
     let playerGo = 'white'
     playerDisplay.textContent = 'white'
@@ -84,7 +87,22 @@ document.addEventListener('DOMContentLoaded', function() {
         if(correctGo){
             if(takenByOpponent && valid){
                 e.target.parentNode.append(draggedElement)
+                const capturedPieceType = e.target.firstChild.id;
                 e.target.remove()
+
+                const startSquare = document.querySelector(`[square-id="${startPositionId}"]`);
+            const endSquare = e.target;
+            const pieceType = draggedElement.id;
+
+            const startSquareCoords = getSquareCoordinates(startSquare);
+            const endSquareCoords = getSquareCoordinates(endSquare);
+
+            const moveText = `${pieceType.toLowerCase()} from ${startSquareCoords} to ${endSquareCoords}`;
+            
+            // Use toLowerCase() para garantir consistência no texto capturado
+            const captureText = ` captured ${capturedPieceType.toLowerCase()}`;
+            addMoveToLog(moveText + captureText);
+
                 checkForWin()
                 changePlayer()
                 return
@@ -98,11 +116,35 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             if(valid){
                 e.target.append(draggedElement)
+
+                const startSquare = document.querySelector(`[square-id="${startPositionId}"]`);
+                const endSquare = e.target;
+                const pieceType = draggedElement.id;
+
+                const startSquareCoords = getSquareCoordinates(startSquare);
+                const endSquareCoords = getSquareCoordinates(endSquare);
+
+                const moveText = `${pieceType.toLowerCase()} from ${startSquareCoords} to ${endSquareCoords}`;
+                addMoveToLog(moveText);
+
                 checkForWin()
                 changePlayer()
                 return
             }
         }
+    }
+
+    function getSquareCoordinates(square) {
+        const row = Math.floor(Number(square.getAttribute('square-id')) / width) + 1;
+        const col = Number(square.getAttribute('square-id')) % width + 1;
+        return `${String.fromCharCode(96 + col)}${row}`;
+    }
+
+    function addMoveToLog(moveText) {
+        // Adicione o texto do movimento à div "rectangle"
+        const moveInfo = document.createElement('div');
+        moveInfo.textContent = moveText;
+        movedPiecesDiv.appendChild(moveInfo);
     }
 
     function checkIfValid(target){
