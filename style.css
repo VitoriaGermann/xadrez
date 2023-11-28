@@ -5,7 +5,6 @@
     flex-wrap: wrap;
     background-color: rgb(146, 39, 39);
     margin: 0 auto;
-    padding-bottom: 150px;
     margin-top: 25px;
 }
 .square{
@@ -80,5 +79,6 @@ path{
     height: 432px;
     background-color: #ebebeb;
     border-radius: 1%; 
+    text-align: center;
 }
 
