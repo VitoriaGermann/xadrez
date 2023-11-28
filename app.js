@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.alert-danger').style.display = 'none'
+    document.querySelector('.alert-success').style.display = 'none'
     const gameBoard = document.querySelector("#gameboard");
     const playerDisplay = document.querySelector("#player");
-    const infoDisplay = document.querySelector("#info-display");
     const infoMove = document.querySelector("#info-move");
+    const infoWin = document.querySelector("#info-win");
     const width = 8;
-    let playerGo = 'black'
-    playerDisplay.textContent = 'black'
+    let playerGo = 'white'
+    playerDisplay.textContent = 'white'
 
     const startPieces = [
         rook, knight, bishop, queen, king, bishop, knight, rook,
@@ -39,10 +40,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             //condicional para colorir de forma correta as peças
             if(i <= 15){
-                square.firstChild.firstChild.classList.add('black')
+                square.firstChild.firstChild.classList.add('white')
             }
             if(i >= 48){
-                square.firstChild.firstChild.classList.add('white')
+                square.firstChild.firstChild.classList.add('black')
             }
             gameBoard.append(square);
         });
@@ -77,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const correctGo = draggedElement.firstChild.classList.contains(playerGo)
         const taken = e.target.classList.contains('piece')
         const valid = checkIfValid(e.target)
-        const opponentGo = playerGo === 'white' ? 'black' : 'white'
+        const opponentGo = playerGo === 'black' ? 'white' : 'black'
         const takenByOpponent = e.target.firstChild?.classList.contains(opponentGo)
 
         if(correctGo){
@@ -302,14 +303,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //função para alternar a vez dos jogadores
     function changePlayer(){
-        if(playerGo === "black"){
+        if(playerGo === "white"){
             reverseIds()
-            playerGo = "white"
-            playerDisplay.textContent = "white"
-        } else{
-            revertIds()
             playerGo = "black"
             playerDisplay.textContent = "black"
+        } else{
+            revertIds()
+            playerGo = "white"
+            playerDisplay.textContent = "white"
         }
     }
 
@@ -327,12 +328,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function checkForWin(){
         const kings = Array.from(document.querySelectorAll('#king'))
         if(!kings.some(king => king.firstChild.classList.contains('white'))){
-            infoDisplay.innerHTML = "Black player wins!"
+            document.querySelector('.alert-success').style.display = 'block'
+            infoWin.textContent = "Black player wins!"
             const allSquares = document.querySelectorAll('.square')
             allSquares.forEach(square => square.firstChild?.setAttribute('draggable', false))
         }
         if(!kings.some(king => king.firstChild.classList.contains('black'))){
-            infoDisplay.innerHTML = "White player wins!"
+            document.querySelector('.alert-success').style.display = 'block'
+            infoWin.textContent = "White player wins!"
             const allSquares = document.querySelectorAll('.square')
             allSquares.forEach(square => square.firstChild?.setAttribute('draggable', false))
         }

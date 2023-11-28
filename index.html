@@ -20,15 +20,26 @@
         </div>
     </nav>
 
-    <div id="gameboard"></div>
-    <div class="alert alert-secondary" role="alert">
-        <p>It is <span id="player"></span>'s go.</p>
-        <p id="info-display"></p>
+    <div class="group">
+
+      <div>
+        <div id="gameboard"></div>
+
+        <div class="content">
+          <div class="alert alert-secondary" role="alert">
+            <p>It is <span id="player"></span>'s go.</p>
+          </div>
+          <div class="alert alert-danger" role="alert">
+            <p id="info-move"></p>
+          </div>
+          <div class="alert alert-success" role="alert">
+            <p id="info-win"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rectangle"></div>
     </div>
-    <div class="alert alert-danger" role="alert">
-        <p id="info-move"></p>
-    </div>
-    <div class="conteudo"></div>
 
     <footer class="footer">
         <div class="container">
