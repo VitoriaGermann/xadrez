@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+
     document.querySelector('.alert-danger').style.display = 'none'
     document.querySelector('.alert-success').style.display = 'none'
 
@@ -11,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const width = 8;
     let playerGo = 'white'
     playerDisplay.textContent = 'white'
+
+    let whiteCapturedCount = 0;
+    let blackCapturedCount = 0;
 
     const startPieces = [
         rook, knight, bishop, queen, king, bishop, knight, rook,
@@ -113,6 +117,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const moveText = `${pieceType.toLowerCase()} from ${startSquareCoords} to ${endSquareCoords}`
                 const captureText = ` captured ${capturedPieceType.toLowerCase()}`
                 addMoveToLog(moveText + captureText)
+
+                if (playerGo === 'white') {
+                    whiteCapturedCount++;
+                    document.getElementById('white-captured').textContent = `Captured by White: ${whiteCapturedCount}`;
+                } else {
+                    blackCapturedCount++;
+                    document.getElementById('black-captured').textContent = `Captured by Black: ${blackCapturedCount}`;
+                }
 
                 checkForWin()
                 changePlayer()

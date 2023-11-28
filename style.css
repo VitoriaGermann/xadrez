@@ -5,7 +5,7 @@
     flex-wrap: wrap;
     background-color: rgb(146, 39, 39);
     margin: 0 auto;
-    margin-top: 25px;
+    margin-top: 30px;
 }
 .square{
     height: 54px;
@@ -80,12 +80,23 @@ path{
     background-color: #ebebeb;
     border-radius: 1%; 
     text-align: center;
+    align-self: first baseline;
+    margin-top: 30px;
 }
 .valid-move {
     background-color: rgba(82, 189, 82, 0.5);
 }
 .invalid-move {
     background-color: rgba(255, 0, 0, 0.5); 
+}
+.captured-pieces {
+    width: 300px;
+    height: 200px;
+    background-color: #ebebeb;
+    border-radius: 1%; 
+    text-align: center;
+    align-self: first baseline;
+    margin-top: 30px;
 }
 
 
