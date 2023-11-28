@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('.alert-danger').style.display = 'none'
     const gameBoard = document.querySelector("#gameboard");
     const playerDisplay = document.querySelector("#player");
     const infoDisplay = document.querySelector("#info-display");
-
+    const infoMove = document.querySelector("#info-move");
     const width = 8;
     let playerGo = 'black'
     playerDisplay.textContent = 'black'
@@ -88,8 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return
             }
             if(taken && !takenByOpponent){
-                infoDisplay.textContent = "You cannot go here!"
-                setTimeout(() => infoDisplay.textContent = "", 2000)
+                document.querySelector('.alert-danger').style.display = 'block'
+                infoMove.textContent = "You cannot go here!"
+                setTimeout(() => infoMove.textContent = "", 2000)
+                setTimeout(() => document.querySelector('.alert-danger').style.display = 'none', 2000)
                 return
             }
             if(valid){
