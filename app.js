@@ -21,14 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
         '', '', '', '', '', '', '', '',
         pawn, pawn, pawn, pawn, pawn, pawn, pawn, pawn,
         rook, knight, bishop, queen, king, bishop, knight, rook
-    ];
+    ]
 
     //função para inicializar o tabuleiro
     function createBoard() {
         startPieces.forEach((startPiece, i) => {
 
             const square = document.createElement('div');
-            square.classList.add('square');
+            square.classList.add('square')
             square.innerHTML = startPiece
             square.firstChild?.setAttribute('draggable', true)
             square.setAttribute('square-id', i)
@@ -48,11 +48,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if(i >= 48){
                 square.firstChild.firstChild.classList.add('black')
             }
-            gameBoard.append(square);
+            gameBoard.append(square)
         });
     }
 
-    createBoard();
+    createBoard()
 
     const allSquares = document.querySelectorAll(".square")
 
@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         square.addEventListener('dragstart', dragStart)
         square.addEventListener('dragover', dragOver)
         square.addEventListener('drop', dragDrop)
+        square.addEventListener('dragleave', dragLeave)
     })
 
     let startPositionId
@@ -74,6 +75,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function dragOver (e){
         e.preventDefault()
+        const validMove = checkIfValid(e.target)
+
+        if (validMove) {
+            e.target.classList.add('valid-move')
+            e.target.classList.remove('invalid-move')
+            setTimeout(() => e.target.classList.remove('valid-move'), 1000)
+        } else{
+            e.target.classList.add('invalid-move')
+            e.target.classList.remove('valid-move');
+            setTimeout(() => e.target.classList.remove('invalid-move'), 1000)
+        }
+
     }
 
     function dragDrop (e){
@@ -87,21 +100,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if(correctGo){
             if(takenByOpponent && valid){
                 e.target.parentNode.append(draggedElement)
-                const capturedPieceType = e.target.firstChild.id;
+                const capturedPieceType = e.target.firstChild.id
                 e.target.remove()
 
-                const startSquare = document.querySelector(`[square-id="${startPositionId}"]`);
-            const endSquare = e.target;
-            const pieceType = draggedElement.id;
+                const startSquare = document.querySelector(`[square-id="${startPositionId}"]`)
+                const endSquare = e.target
+                const pieceType = draggedElement.id
 
-            const startSquareCoords = getSquareCoordinates(startSquare);
-            const endSquareCoords = getSquareCoordinates(endSquare);
+                const startSquareCoords = getSquareCoordinates(startSquare)
+                const endSquareCoords = getSquareCoordinates(endSquare)
 
-            const moveText = `${pieceType.toLowerCase()} from ${startSquareCoords} to ${endSquareCoords}`;
-            
-            // Use toLowerCase() para garantir consistência no texto capturado
-            const captureText = ` captured ${capturedPieceType.toLowerCase()}`;
-            addMoveToLog(moveText + captureText);
+                const moveText = `${pieceType.toLowerCase()} from ${startSquareCoords} to ${endSquareCoords}`
+                const captureText = ` captured ${capturedPieceType.toLowerCase()}`
+                addMoveToLog(moveText + captureText)
 
                 checkForWin()
                 changePlayer()
@@ -117,15 +128,18 @@ document.addEventListener('DOMContentLoaded', function() {
             if(valid){
                 e.target.append(draggedElement)
 
-                const startSquare = document.querySelector(`[square-id="${startPositionId}"]`);
-                const endSquare = e.target;
-                const pieceType = draggedElement.id;
+                const startSquare = document.querySelector(`[square-id="${startPositionId}"]`)
+                const endSquare = e.target
+                const pieceType = draggedElement.id
 
-                const startSquareCoords = getSquareCoordinates(startSquare);
-                const endSquareCoords = getSquareCoordinates(endSquare);
+                const startSquareCoords = getSquareCoordinates(startSquare)
+                const endSquareCoords = getSquareCoordinates(endSquare)
 
-                const moveText = `${pieceType.toLowerCase()} from ${startSquareCoords} to ${endSquareCoords}`;
-                addMoveToLog(moveText);
+                const moveText = `${pieceType.toLowerCase()} from ${startSquareCoords} to ${endSquareCoords}`
+                addMoveToLog(moveText)
+
+                e.target.classList.add('valid-move')
+                setTimeout(() => e.target.classList.remove('valid-move'), 1000)
 
                 checkForWin()
                 changePlayer()
@@ -134,17 +148,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function dragLeave(e) {
+        e.target.classList.remove('valid-move', 'invalid-move');
+    }
+    
+
     function getSquareCoordinates(square) {
-        const row = Math.floor(Number(square.getAttribute('square-id')) / width) + 1;
-        const col = Number(square.getAttribute('square-id')) % width + 1;
-        return `${String.fromCharCode(96 + col)}${row}`;
+        const row = Math.floor(Number(square.getAttribute('square-id')) / width) + 1
+        const col = Number(square.getAttribute('square-id')) % width + 1
+        return `${String.fromCharCode(96 + col)}${row}`
     }
 
     function addMoveToLog(moveText) {
-        // Adicione o texto do movimento à div "rectangle"
-        const moveInfo = document.createElement('div');
-        moveInfo.textContent = moveText;
-        movedPiecesDiv.appendChild(moveInfo);
+        const moveInfo = document.createElement('div')
+        moveInfo.textContent = moveText
+        movedPiecesDiv.appendChild(moveInfo)
     }
 
     function checkIfValid(target){
@@ -166,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     startId + width + 1 === targetId && document.querySelector(`[square-id="${startId+width+1}"]`).firstChild
                 )
                 {return true} 
-            break;
+            break
 
             case 'knight' :
                 if(
@@ -218,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     startId + width * 7 - 7 === targetId && !document.querySelector(`[square-id="${startId+width-1}"]`).firstChild && !document.querySelector(`[square-id="${startId+width*2-2}"]`).firstChild && !document.querySelector(`[square-id="${startId+width*3-3}"]`).firstChild && !document.querySelector(`[square-id="${startId+width*4-4}"]`).firstChild && !document.querySelector(`[square-id="${startId+width*5-5}"]`).firstChild && !document.querySelector(`[square-id="${startId+width*6-6}"]`).firstChild 
                 )
                 {return true}
-            break;
+            break
             
             case 'rook' :
                 if(

@@ -81,4 +81,11 @@ path{
     border-radius: 1%; 
     text-align: center;
 }
+.valid-move {
+    background-color: rgba(82, 189, 82, 0.5);
+}
+.invalid-move {
+    background-color: rgba(255, 0, 0, 0.5); 
+}
+
 
