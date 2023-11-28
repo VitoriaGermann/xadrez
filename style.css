@@ -89,7 +89,7 @@ path{
 .invalid-move {
     background-color: rgba(255, 0, 0, 0.5); 
 }
-.captured-pieces {
+.captured-pieces{
     width: 300px;
     height: 216px;
     background-color: #ebebeb;

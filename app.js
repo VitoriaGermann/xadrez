@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+    //inicia jogo com as mensagens de xeque mate e movimento inválido escondidas
     document.querySelector('.alert-danger').style.display = 'none'
     document.querySelector('.alert-success').style.display = 'none'
 
+    //acessando elementos html a serem manipulados
     const gameBoard = document.querySelector("#gameboard");
     const playerDisplay = document.querySelector("#player");
     const infoMove = document.querySelector("#info-move");
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let whiteCapturedCount = 0;
     let blackCapturedCount = 0;
 
+    //definindo as posições iniciais das peças no tabuleiro
     const startPieces = [
         rook, knight, bishop, queen, king, bishop, knight, rook,
         pawn, pawn, pawn, pawn, pawn, pawn, pawn, pawn,
@@ -81,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault()
         const validMove = checkIfValid(e.target)
 
+        //condicionais para colorir os quadrados do tabuleiro de acordo com o movimento da peça
         if (validMove) {
             e.target.classList.add('valid-move')
             e.target.classList.remove('invalid-move')
@@ -95,16 +99,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function dragDrop (e){
         e.stopPropagation()
+        //valida se a peça é do jogador atual
         const correctGo = draggedElement.firstChild.classList.contains(playerGo)
+        //verifica se existe uma peça no quadrado de destino
         const taken = e.target.classList.contains('piece')
+        //chama função de validação do movimento da peça
         const valid = checkIfValid(e.target)
         const opponentGo = playerGo === 'black' ? 'white' : 'black'
+        //verifica se a peça no quadrado de destino pertence ao oponente
         const takenByOpponent = e.target.firstChild?.classList.contains(opponentGo)
 
         if(correctGo){
             if(takenByOpponent && valid){
+                //se a peça é válida, aciona ao quadrado
                 e.target.parentNode.append(draggedElement)
                 const capturedPieceType = e.target.firstChild.id
+                //se a peça for capturada, remove ela do tabuleiro
                 e.target.remove()
 
                 const startSquare = document.querySelector(`[square-id="${startPositionId}"]`)
@@ -114,23 +124,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 const startSquareCoords = getSquareCoordinates(startSquare)
                 const endSquareCoords = getSquareCoordinates(endSquare)
 
+                //cria o texto da listagem do movimento e captura
                 const moveText = `${pieceType.toLowerCase()} from ${startSquareCoords} to ${endSquareCoords}`
                 const captureText = ` captured ${capturedPieceType.toLowerCase()}`
                 addMoveToLog(moveText + captureText)
 
+                //atualiza a contagem de peças capturadas dos jogadores
                 if (playerGo === 'white') {
                     whiteCapturedCount++;
-                    document.getElementById('white-captured').textContent = `Captured by White: ${whiteCapturedCount}`;
+                    document.getElementById('white-captured').textContent = `Captured by White: ${whiteCapturedCount}`
                 } else {
                     blackCapturedCount++;
-                    document.getElementById('black-captured').textContent = `Captured by Black: ${blackCapturedCount}`;
+                    document.getElementById('black-captured').textContent = `Captured by Black: ${blackCapturedCount}`  
                 }
-
                 checkForWin()
                 changePlayer()
                 return
             }
             if(taken && !takenByOpponent){
+                //seta como visível o alert caso o movimento não seja válido
                 document.querySelector('.alert-danger').style.display = 'block'
                 infoMove.textContent = "You cannot go here!"
                 setTimeout(() => infoMove.textContent = "", 2000)
@@ -138,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return
             }
             if(valid){
+                //adiciona a peça movida ao quadrado escolhido
                 e.target.append(draggedElement)
 
                 const startSquare = document.querySelector(`[square-id="${startPositionId}"]`)
@@ -147,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const startSquareCoords = getSquareCoordinates(startSquare)
                 const endSquareCoords = getSquareCoordinates(endSquare)
 
+                //cria texto do registro do movimento
                 const moveText = `${pieceType.toLowerCase()} from ${startSquareCoords} to ${endSquareCoords}`
                 addMoveToLog(moveText)
 
@@ -182,9 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const startId = Number(startPositionId)
         const piece = draggedElement.id
 
-        console.log('targetId', targetId)
+        /*console.log('targetId', targetId)
         console.log('startId', startId)
-        console.log('piece', piece)
+        console.log('piece', piece)*/
     
         switch(piece){
             case 'pawn' :
@@ -398,14 +412,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function checkForWin(){
+
         const kings = Array.from(document.querySelectorAll('#king'))
+
         if(!kings.some(king => king.firstChild.classList.contains('white'))){
+
             document.querySelector('.alert-success').style.display = 'block'
             infoWin.textContent = "Black player wins!"
             const allSquares = document.querySelectorAll('.square')
             allSquares.forEach(square => square.firstChild?.setAttribute('draggable', false))
         }
         if(!kings.some(king => king.firstChild.classList.contains('black'))){
+            
             document.querySelector('.alert-success').style.display = 'block'
             infoWin.textContent = "White player wins!"
             const allSquares = document.querySelectorAll('.square')
