@@ -2,12 +2,14 @@ document.addEventListener('DOMContentLoaded', function() {
     //inicia jogo com as mensagens de xeque mate e movimento inválido escondidas
     document.querySelector('.alert-danger').style.display = 'none'
     document.querySelector('.alert-success').style.display = 'none'
+    document.querySelector('.alert-warning').style.display = 'none'
 
     //acessando elementos html a serem manipulados
     const gameBoard = document.querySelector("#gameboard");
     const playerDisplay = document.querySelector("#player");
     const infoMove = document.querySelector("#info-move");
     const infoWin = document.querySelector("#info-win");
+    const infoXeque = document.querySelector("#info-xeque");
     const movedPiecesDiv = document.querySelector('.rectangle');
 
     const width = 8;
@@ -49,11 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             //condicional para colorir de forma correta as peças
             if(i <= 15){
+                square.firstChild.classList.add('white')
                 square.firstChild.firstChild.classList.add('white')
             }
             if(i >= 48){
+                square.firstChild.classList.add('black')
                 square.firstChild.firstChild.classList.add('black')
             }
+
             gameBoard.append(square)
         });
     }
@@ -109,6 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const takenByOpponent = e.target.firstChild?.classList.contains(opponentGo)
 
         if(correctGo){
+            isInCheck(playerGo)
+
             if(takenByOpponent && valid){
                 //se a peça é válida, adiciona ao quadrado
                 e.target.parentNode.append(draggedElement)
@@ -136,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     blackCapturedCount++;
                     document.getElementById('black-captured').textContent = `Captured by Black: ${blackCapturedCount}`  
                 }
+
                 checkForWin()
                 changePlayer()
                 return
@@ -155,10 +163,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const startSquare = document.querySelector(`[square-id="${startPositionId}"]`)
                 const endSquare = e.target
                 const pieceType = draggedElement.id
-
-                console.log('playergo')
-                console.log(playerGo)
-
                 const startSquareCoords = getSquareCoordinates(startSquare, playerGo)
                 const endSquareCoords = getSquareCoordinates(endSquare, playerGo)
 
@@ -206,10 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const targetId = Number(target.getAttribute('square-id')) || Number(target.parentNode.getAttribute('square-id'))
         const startId = Number(startPositionId)
         const piece = draggedElement.id
-
-        /*console.log('targetId', targetId)
-        console.log('startId', startId)
-        console.log('piece', piece)*/
     
         switch(piece){
             case 'pawn' :
@@ -397,6 +397,47 @@ document.addEventListener('DOMContentLoaded', function() {
             break
         }
     }
+
+    function isInCheck(playerColor) {
+        if(playerGo !== 'white') {
+            revertIds();
+        }
+
+        let result = false
+
+        const kings = Array.from(document.querySelectorAll('#king'))
+        const kingSquare = kings.find(king => king.firstChild.classList.contains(playerColor));
+        const opponentColor = playerColor === 'white' ? 'black' : 'white';
+        const allSquares = document.querySelectorAll('.square');
+    
+        // Verifica se há alguma peça do oponente que pode atacar o rei
+        for (const square of allSquares) {
+            const piece = square.firstChild
+
+            if (piece && piece.classList.contains(opponentColor)) {
+                const validMove = checkIfValid(square, kingSquare)
+    
+                if (validMove) {
+                    console.log(kingSquare)
+                    console.log(piece)
+                    result = true // O rei está em xeque
+                }
+            }
+        }
+
+        if(result) {
+            document.querySelector('.alert-warning').style.display = 'block'
+            infoXeque.textContent = "O rei está em xeque!"
+            setTimeout(() => infoXeque.textContent = "", 2000)
+        }
+
+        if(playerGo !== 'white') {
+            reverseIds();
+        }
+    
+        return result;
+    }
+    
 
     //função para alternar a vez dos jogadores
     function changePlayer(){
