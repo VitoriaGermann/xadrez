@@ -39,7 +39,7 @@ path{
 .white{
     fill: #FFFFEF;
 }
-.alert.alert-secondary, .alert.alert-danger, .alert.alert-success{
+.alert.alert-secondary, .alert.alert-danger, .alert.alert-success, .alert.alert-warning{
     height: 30px;
     width: 432px;
     display: flex;

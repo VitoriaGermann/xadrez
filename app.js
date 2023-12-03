@@ -429,6 +429,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.alert-warning').style.display = 'block'
             infoXeque.textContent = "O rei está em xeque!"
             setTimeout(() => infoXeque.textContent = "", 2000)
+            setTimeout(() => document.querySelector('.alert-warning').style.display = 'none', 2000)
         }
 
         if(playerGo !== 'white') {
