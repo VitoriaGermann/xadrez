@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-
     //inicia jogo com as mensagens de xeque mate e movimento inválido escondidas
     document.querySelector('.alert-danger').style.display = 'none'
     document.querySelector('.alert-success').style.display = 'none'
@@ -111,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if(correctGo){
             if(takenByOpponent && valid){
-                //se a peça é válida, aciona ao quadrado
+                //se a peça é válida, adiciona ao quadrado
                 e.target.parentNode.append(draggedElement)
                 const capturedPieceType = e.target.firstChild.id
                 //se a peça for capturada, remove ela do tabuleiro
@@ -121,8 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const endSquare = e.target
                 const pieceType = draggedElement.id
 
-                const startSquareCoords = getSquareCoordinates(startSquare)
-                const endSquareCoords = getSquareCoordinates(endSquare)
+                const startSquareCoords = getSquareCoordinates(startSquare, playerGo)
+                const endSquareCoords = getSquareCoordinates(endSquare, playerGo)
 
                 //cria o texto da listagem do movimento e captura
                 const moveText = `${pieceType.toLowerCase()} from ${startSquareCoords} to ${endSquareCoords}`
@@ -157,8 +156,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const endSquare = e.target
                 const pieceType = draggedElement.id
 
-                const startSquareCoords = getSquareCoordinates(startSquare)
-                const endSquareCoords = getSquareCoordinates(endSquare)
+                console.log('playergo')
+                console.log(playerGo)
+
+                const startSquareCoords = getSquareCoordinates(startSquare, playerGo)
+                const endSquareCoords = getSquareCoordinates(endSquare, playerGo)
 
                 //cria texto do registro do movimento
                 const moveText = `${pieceType.toLowerCase()} from ${startSquareCoords} to ${endSquareCoords}`
@@ -179,9 +181,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
 
-    function getSquareCoordinates(square) {
+    function getSquareCoordinates(square, playerGo) {
+        if(playerGo !== 'white') {
+            revertIds();
+        }
+
         const row = Math.floor(Number(square.getAttribute('square-id')) / width) + 1
         const col = Number(square.getAttribute('square-id')) % width + 1
+
+        if(playerGo !== 'white'){
+            reverseIds();
+        }
+
         return `${String.fromCharCode(96 + col)}${row}`
     }
 
