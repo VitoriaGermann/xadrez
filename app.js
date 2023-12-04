@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const square = document.createElement('div');
             square.classList.add('square')
             square.innerHTML = startPiece
+            //valida se o tabuleiro não está bloqueado
             square.firstChild?.setAttribute('draggable', true)
             square.setAttribute('square-id', i)
             const row = Math.floor((63 - i) / 8) + 1
@@ -156,9 +157,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             if(valid){
                 //adiciona a peça movida ao quadrado escolhido
-
                 e.target.append(draggedElement)
 
+                //valida se algum rei está em xeque
                 isInCheck('white')
                 isInCheck('black')
 
@@ -202,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${String.fromCharCode(96 + col)}${row}`
     }
 
+    //função para adicionar na div o registro do movimento
     function addMoveToLog(moveText) {
         const moveInfo = document.createElement('div')
         moveInfo.textContent = moveText
@@ -400,6 +402,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    //função para validar se o rei está em xeque
     function isInCheck(playerColor) {
         let result = false
 
@@ -416,11 +419,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const validMove = checkIfValid(kingSquare, square)
 
                 if (validMove) {
-                    result = true // O rei está em xeque
+                    result = true
                 }
             }
         }
 
+        //coloca na tela o alert que o rei está em xeque durante 2 segundos
         if(result) {
             document.querySelector('.alert-warning').style.display = 'block'
             infoXeque.textContent = `${playerColor} King is in check!`
@@ -454,22 +458,25 @@ document.addEventListener('DOMContentLoaded', function() {
             allSquares.forEach((square, i) => square.setAttribute('square-id', i))
     }
 
+    //função para validar vitória
     function checkForWin(){
 
         const kings = Array.from(document.querySelectorAll('#king'))
 
         if(!kings.some(king => king.firstChild.classList.contains('white'))){
-
+            //coloca na tela o alert de que as brancas venceram
             document.querySelector('.alert-success').style.display = 'block'
             infoWin.textContent = "Black player wins!"
             const allSquares = document.querySelectorAll('.square')
+            //trava o tabuleiro
             allSquares.forEach(square => square.firstChild?.setAttribute('draggable', false))
         }
         if(!kings.some(king => king.firstChild.classList.contains('black'))){
-            
+            //coloca na tela o alert de que as pretas venceram
             document.querySelector('.alert-success').style.display = 'block'
             infoWin.textContent = "White player wins!"
             const allSquares = document.querySelectorAll('.square')
+            //trava o tabuleiro
             allSquares.forEach(square => square.firstChild?.setAttribute('draggable', false))
         }
     }
