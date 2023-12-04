@@ -114,8 +114,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const takenByOpponent = e.target.firstChild?.classList.contains(opponentGo)
 
         if(correctGo){
-            isInCheck(playerGo)
-
             if(takenByOpponent && valid){
                 //se a peça é válida, adiciona ao quadrado
                 e.target.parentNode.append(draggedElement)
@@ -158,7 +156,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             if(valid){
                 //adiciona a peça movida ao quadrado escolhido
+
                 e.target.append(draggedElement)
+
+                isInCheck('white')
+                isInCheck('black')
 
                 const startSquare = document.querySelector(`[square-id="${startPositionId}"]`)
                 const endSquare = e.target
@@ -206,11 +208,11 @@ document.addEventListener('DOMContentLoaded', function() {
         movedPiecesDiv.appendChild(moveInfo)
     }
 
-    function checkIfValid(target){
+    function checkIfValid(target, actionPieceSquare){
         const targetId = Number(target.getAttribute('square-id')) || Number(target.parentNode.getAttribute('square-id'))
-        const startId = Number(startPositionId)
-        const piece = draggedElement.id
-    
+        const startId = actionPieceSquare ? Number(actionPieceSquare.getAttribute('square-id')) : Number(startPositionId)
+        const piece = actionPieceSquare ? actionPieceSquare.firstChild.id : draggedElement.id
+
         switch(piece){
             case 'pawn' :
                 const starterRow = [8, 9, 10, 11, 12, 13, 14, 15]
@@ -399,10 +401,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function isInCheck(playerColor) {
-        if(playerGo !== 'white') {
-            revertIds();
-        }
-
         let result = false
 
         const kings = Array.from(document.querySelectorAll('#king'))
@@ -415,11 +413,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const piece = square.firstChild
 
             if (piece && piece.classList.contains(opponentColor)) {
-                const validMove = checkIfValid(square, kingSquare)
-    
+                const validMove = checkIfValid(kingSquare, square)
+
                 if (validMove) {
-                    console.log(kingSquare)
-                    console.log(piece)
                     result = true // O rei está em xeque
                 }
             }
@@ -427,18 +423,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if(result) {
             document.querySelector('.alert-warning').style.display = 'block'
-            infoXeque.textContent = "O rei está em xeque!"
+            infoXeque.textContent = `${playerColor} King is in check!`
             setTimeout(() => infoXeque.textContent = "", 2000)
             setTimeout(() => document.querySelector('.alert-warning').style.display = 'none', 2000)
         }
-
-        if(playerGo !== 'white') {
-            reverseIds();
-        }
-    
         return result;
     }
-    
 
     //função para alternar a vez dos jogadores
     function changePlayer(){
