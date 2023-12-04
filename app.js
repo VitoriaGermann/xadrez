@@ -418,9 +418,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (piece && piece.classList.contains(opponentColor)) {
                 const validMove = checkIfValid(kingSquare, square)
 
-                if (validMove) {
-                    result = true
-                }
+                if (validMove) {result = true}
             }
         }
 
